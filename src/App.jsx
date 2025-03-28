@@ -8,9 +8,14 @@ import logoImg from "./assets/logo.png";
 import * as location from "./loc.js";
 
 function App() {
+  const storeIds = JSON.parse(localStorage.getItem("pickedPlaces")) || [];
+  const storedPlaces = storeIds.map((id) =>
+    AVAILABLE_PLACES.find((place) => place.id === id)
+  );
+
   const modal = useRef();
   const selectedPlace = useRef();
-  const [pickedPlaces, setPickedPlaces] = useState([]);
+  const [pickedPlaces, setPickedPlaces] = useState(storedPlaces);
   const [availablePlaces, setAvailablePlaces] = useState([]);
 
   useEffect(() => {
@@ -55,6 +60,12 @@ function App() {
       prevPickedPlaces.filter((place) => place.id !== selectedPlace.current)
     );
     modal.current.close();
+
+    const storeIds = JSON.parse(localStorage.getItem("pickedPlaces")) || [];
+    localStorage.setItem(
+      "pickedPlaces",
+      JSON.stringify(storeIds.filter((id) => id !== selectedPlace.current))
+    );
   }
 
   return (
